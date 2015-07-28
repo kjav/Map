@@ -142,7 +142,7 @@ function perlinNoise(n_octaves, size) {
     n *= 2;
   }
 
-  var r = 1/2;
+  var r = 0.3;
   var octave = octaves[n_octaves - 1];
   for (var i = n_octaves - 2; i >= 0; i--) {
     octave = sumArraysFactor(r, octave, octaves[i]);

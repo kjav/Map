@@ -62,7 +62,7 @@ function flatten(xxs) {
 
 
 var geometry = new THREE.PlaneGeometry( 160, 160, 127, 127 );
-var map = flatten(perlinNoise(6, 7));
+var map = generateChunk(0, 0);
 for (var i=0; i < 128; i++) {
   for (var j=0; j < 128; j++) {
     geometry.vertices[i * 128 + j].z = 80 * map[i * 128 + j];
@@ -72,6 +72,17 @@ geometry.verticesNeedUpdate = true;
 var material = planeMaterial;
 var plane = new THREE.Mesh( geometry, material );
 scene.add( plane );
+var geometry2 = new THREE.PlaneGeometry( 160, 160, 127, 127 );
+var map2 = generateChunk(0, 1);
+for (var i=0; i < 128; i++) {
+  for (var j=0; j < 128; j++) {
+    geometry2.vertices[i * 128 + j].z = 80 * map2[i * 128 + j];
+  }
+}
+geometry2.verticesNeedUpdate = true;
+var plane2 = new THREE.Mesh( geometry2, material );
+plane2.position.x += 160;
+scene.add( plane2 );
 
 
 // create a point light
