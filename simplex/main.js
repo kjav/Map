@@ -51,7 +51,7 @@ var waterMaterial =
     {
       color: 0x0088ff,
       transparent: true,
-      opacity: 0.9
+      opacity: 0.85
     });
 
 
@@ -116,7 +116,7 @@ scene.add( bplane4 );
 var watergeometry = new THREE.PlaneBufferGeometry(1200, 1200, 1, 1);
 for (var i=0;i<2;i++) {
   for (var j=0;j<2;j++) {
-    watergeometry.attributes.position.array[(2 * j + i) * 3 + 2] = 30;
+    watergeometry.attributes.position.array[(2 * j + i) * 3 + 2] = 24;
   }
 }
 watergeometry.attributes.position.needsUpdate = true;
@@ -139,10 +139,12 @@ scene.add(pointLight);
 
 
 
-var interval = setInterval(function() {
+function render() {
   renderer.render(scene, camera); 
   controls.update();
-}, 50);
+  window.requestAnimationFrame(render);
+}
+window.requestAnimationFrame(render);
 
 var currChunk = 2;
 function addChunk() {
