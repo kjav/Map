@@ -116,7 +116,7 @@ scene.add( bplane4 );
 var watergeometry = new THREE.PlaneBufferGeometry(1200, 1200, 1, 1);
 for (var i=0;i<2;i++) {
   for (var j=0;j<2;j++) {
-    watergeometry.attributes.position.array[(2 * j + i) * 3 + 2] = 24;
+    watergeometry.attributes.position.array[(2 * j + i) * 3 + 2] = 30;
   }
 }
 watergeometry.attributes.position.needsUpdate = true;
