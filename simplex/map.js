@@ -31,10 +31,12 @@ function delta(x) {
   if (max < x) max = x;
   if (min > x) min = x;
 
-  if (x > 0.4) {
+  if (x > 0.4 && x < 0.8) {
     x = 0.4;
   }
-  x += Math.random() / 500;
+  if (x > 0.8) {
+    x -= 0.4;
+  }
   return x;
 }
 

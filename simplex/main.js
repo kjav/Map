@@ -1,8 +1,8 @@
 var map = new Map(0 | 1000000000 * Math.random());
 
 // set the scene size
-var WIDTH = 400,
-  HEIGHT = 300;
+var WIDTH = window.innerWidth,
+  HEIGHT = window.innerHeight;
 
 // set some camera attributes
 var VIEW_ANGLE = 45,
@@ -130,9 +130,9 @@ var pointLight =
   new THREE.PointLight(0xFFFFFF);
 
 // set its position
-pointLight.position.x = 100;
-pointLight.position.y = 50;
-pointLight.position.z = 120;
+pointLight.position.x = 128;
+pointLight.position.y = -128;
+pointLight.position.z = 180;
 
 // add to the scene
 scene.add(pointLight);
@@ -158,5 +158,6 @@ function addChunk() {
   bplane.position.x = currChunk * 255;
   scene.add(bplane);
 
-  currChunk++;
+  currChunk = 1-currChunk;
+  if (currChunk > 0) currChunk++;
 }
