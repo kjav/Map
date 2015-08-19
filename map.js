@@ -236,6 +236,93 @@ function interpolate_float32array(octaves) {
   return octaves.subarray(0, Math.pow(2, 2 * PARAMS.SIZE));
 }
 
+function getter(array, edges, startpos, startposedges, startn) {
+  function get(x, y) {
+    if (x < 2) {
+      return edges[startposedges + (1-x) * (startn) + y + (startn) * 6];
+    } else if (y < 2) {
+      return edges[startposedges + x + y * (startn)];
+    } else if (x > startn + 1) {
+      return edges[startposedges + y + (startn) * (startn - x)];
+    } else if (y > startn + 1) {
+      return edges[startposedges + x + (startn) * (y + - 1 - startn)];
+    } else {
+      return array[startpos + (x-2) + (y-2)*startn];
+    }
+  }
+  return get;
+}
+
+function ointerpolate(array, edges, startn, startpos) {
+  var p_ix = -1;
+  var p_iy = -1;
+
+  width = startn;
+  height = startn;
+
+  scale = Math.pow(2, PARAMS.SIZE) / startn;
+
+  var f0, f1, f2, f3;
+
+  var g = getter(array, edges, startpos, Math.pow(2, PARAMS.SIZE + 3) - 16 * startn, startn);
+
+  var x = 1.5 + 0.5/scale;
+  for (var i = 0; i < width * scale; i++) {
+    y = 1.5 + 0.5 / scale;
+
+    for (var j = 0; j < height * scale; j++) {
+      var i_x = x | 0;
+      var i_y = y | 0;
+      var y0,y1,y2,y3;
+
+      if (i_y == p_iy + 1) {
+        f0 = f1;
+        f1 = f2;
+        f2 = f3;
+
+        f3 = cubic(g(i_x - 1, i_y + 2), g(i_x - 0, i_y + 2),
+                   g(i_x + 1, i_y + 2), g(i_x + 2, i_y + 2));
+
+      } else {
+        f0 = cubic(g(i_x - 1, i_y - 1), g(i_x - 0, i_y - 1),
+                   g(i_x + 1, i_y - 1), g(i_x + 2, i_y - 1));
+
+        f1 = cubic(g(i_x - 1, i_y - 0), g(i_x - 0, i_y - 0),
+                   g(i_x + 1, i_y - 0), g(i_x + 2, i_y - 0));
+
+        f2 = cubic(g(i_x - 1, i_y + 1), g(i_x - 0, i_y + 1),
+                   g(i_x + 1, i_y + 1), g(i_x + 2, i_y + 1));
+
+        f3 = cubic(g(i_x - 1, i_y + 2), g(i_x - 0, i_y + 2),
+                   g(i_x + 1, i_y + 2), g(i_x + 2, i_y + 2));
+      }
+      p_ix = i_x;
+      p_iy = i_y;
+
+      var f = cubic(f0(x - i_x), f1(x - i_x),
+                    f2(x - i_x), f3(x - i_x));
+
+      array[i + Math.pow(2, PARAMS.SIZE) * j] = f(y - i_y);
+
+      y += 1 / scale;
+    }
+    x += 1 / scale;
+  }
+  return array.subarray(0, Math.pow(2, PARAMS.SIZE * 2));
+}
+
+function cubic(y0, y1, y2, y3) {
+
+  var a = (  -y0 + 3*(y1 -   y2)+ y3) / 6;
+  var b = (   y0 -  2*y1 +   y2)      / 2;
+  var c = (-2*y0 -  3*y1 + 6*y2 - y3) / 6;
+  var d =             y1;
+
+  return function(x) {
+    return a*x*x*x + b*x*x + c*x + d;
+  };
+}
+
 /*
 
 vec4 cubic(float v)

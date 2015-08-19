@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <script>
+var MASKS = {
+  MAP: 0x000000ff
+};
+
+var x1 = Math.random();
+var x2 = Math.random();
+var x3 = Math.random();
+var x4 = Math.random();
+var scale = 0.02 * 257;
+var x5 = (x1+x2+x3+x4) / 4 + Math.random() * scale * 2 - scale;
+
+var map1 = generate(8, x1, (x1+x2)/2, (x1+x3)/2, x5);
+var map2 = generate(8, (x1+x2)/2, x2, x5, (x2+x4)/2);
+var map3 = generate(8, x1, (x1+x2)/2, (x1+x3)/2, x5);
+var map4 = generate(8, x1, (x1+x2)/2, (x1+x3)/2, x5);
+
+function generate(n, a, b, c, d) {
+  var size = Math.pow(2, n) + 1;
+  var map = new Float32Array(size*size);
+  set(0, 0, a);
+  set(size-1, 0, b);
+  set(0, size-1, c);
+  set(size-1, size-1, d);
+  diamondsquare(0, 0, size - 1, size - 1);
+  return map;
+
+  function get(x, y) {
+    return map[y * size + x];
+  }
+
+  function set(x, y, value) {
+    map[y * size + x] = value;
+  }
+
+  function diamondsquare(x1, y1, x2, y2) {
+    if (x2 - x1 < 2) return;
+
+    var mx = x1 + 0|(x2-x1)/2;
+    var my = y1 + 0|(y2-y1)/2;
+
+    square(x1, y1, x2, y2, mx, my);
+
+    diamond(x1, y1, x2, y2, mx, my);
+
+    diamondsquare(x1, y1, mx, my);
+    diamondsquare(x1, my, mx, y2);
+    diamondsquare(mx, y1, x2, my);
+    diamondsquare(mx, my, x2, y2);
+  }
+
+  function square(x1, y1, x2, y2, mx, my) {
+    var value = average4(get(x1, y1), get(x2, y1), get(x1, y2), get(x2, y2));
+    var scale = 0.005 * (y2-y1);
+    var delta = Math.random() * scale * 2 - scale;
+    set(mx, my, value + delta);
+  }
+
+  function diamond(x1, y1, x2, y2, mx, my) {
+    set(mx, y1, average2(get(x1, y1), get(x2, y1)));
+    set(mx, y2, average2(get(x1, y2), get(x2, y2)));
+    set(x1, my, average2(get(x1, y1), get(x1, y2)));
+    set(x2, my, average2(get(x2, y1), get(x2, y2)));
+  }
+
+  function average2(a, b) { return (a + b)/2; }
+  function average4(a, b, c, d) { return (a + b + c + d)/4; }
+}
+    </script>
+  </head>
+</html>
+
+<!--
+0     1     4     .     .
+
+
+2     3     5     .     .
+
+
+.     .     .     .     .
+
+
+.     .     .     .     .
+
+
+.     .     .     .     .
+
+When $0 is chosen in [0,1] this places a restriction on $1, as $1 = ($0+$4)/2 so $4 = 2*$1 - $0 which must be in [0,1]
+
+2*max - $0 = 1 and 2*min - $0 = 0 as this is a linear relation
+
+So min = $0 / 2, max = (1 - $0) / 2
+
+$1 = (max - min) * Math.random() + min
+   = ((1-2*$0)/2) * Math.random() + $0 / 2
+   = (0.5 - $0) * Math.random + $0/2
+
+Then $4 = 2$1 - $0
+-->

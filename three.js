@@ -62,7 +62,10 @@ function flatten(xxs) {
 
 
 var geometry = new THREE.PlaneGeometry( 160, 160, 127, 127 );
-var map = generateChunk(0, 0);
+var octaves = generateOctaves(0, 0);
+var edges = generateEdges(0, 0);
+var map = ointerpolate(octaves, edges, 4, 21824);
+//var map = generateChunk(0, 0);
 for (var i=0; i < 128; i++) {
   for (var j=0; j < 128; j++) {
     geometry.vertices[i * 128 + j].z = 80 * map[i * 128 + j];
@@ -73,7 +76,10 @@ var material = planeMaterial;
 var plane = new THREE.Mesh( geometry, material );
 scene.add( plane );
 var geometry2 = new THREE.PlaneGeometry( 160, 160, 127, 127 );
-var map2 = generateChunk(0, 1);
+var octaves2 = generateOctaves(1, 0);
+var edges2 = generateEdges(1, 0);
+var map2 = ointerpolate(octaves2, edges2, 4, 21824);
+//var map2 = generateChunk(0, 1);
 for (var i=0; i < 128; i++) {
   for (var j=0; j < 128; j++) {
     geometry2.vertices[i * 128 + j].z = 80 * map2[i * 128 + j];
@@ -99,7 +105,7 @@ scene.add(pointLight);
 
 
 
-setInterval(function() {
+var interval = setInterval(function() {
   renderer.render(scene, camera); 
   controls.update();
 }, 16);

@@ -1,0 +1,123 @@
+<html>
+<head>
+<script>
+
+
+function sub(a, b) {
+  if (b.length > a.length) {
+    var str = a; a = b; b = str;
+  }
+  b = pad(b, a.length);
+  var str = '';
+  var carry = 0;
+  for (var i = 0; i < b.length; i++) {
+    str = (((+a[a.length - i - 1]) - (+b[b.length - i - 1]) - carry + 10) % 10) + str;
+    carry = ((+a[a.length - i - 1]) - (+b[b.length - i - 1]) - carry) < 0 ? 1 : 0;
+  }
+  if (a.length > b.length) {
+    if (carry) {
+      str = (+a[a.length - b.length - 1] - carry + 10) + str;
+    } else {
+      str = a[a.length - b.length - 1] + str;
+    }
+    str = a.slice(0, a.length - b.length - 1) + str;
+  } else {
+    if (carry) {
+      str = carry + str;
+    }
+  }
+  return unpad(str);
+}
+
+function pad(s, n) {
+  if (n - s.length > 0)
+    return repeat('0', n - s.length) + s;
+  return s;
+}
+
+function mod(a, b) {
+  b = pad(b, a.length);
+  a = pad(a, b.length);
+  if (b < a) {
+    var c = b;
+    var d = c;
+    while (c < pad(a, c.length)) {
+      d = c;
+      c = mult('2', c);
+    }
+    return mod(sub(a, d), b);
+  }
+  return unpad(a);
+}
+
+function mult(a, b) {
+  if (b.length < a.length) {
+    var str = a; a = b; b = str;
+  }
+  var total = '0';
+  for (var i=0;i<a.length;i++) {
+    total = add(total, addNTimes(b, +a[i]) + repeat('0', a.length - i - 1));
+  }
+  return total;//unpad(total);
+}
+
+function repeat(s, n) {
+  var t = '';
+  for (;n>0;n--) {
+    t += s;
+  }
+  return '';
+}
+
+function addNTimes(x, n) {
+  var total = '0';
+  for (var i=0;i<n;i++) total = add(total, x);
+  return total;
+}
+
+function addMany(xs) {
+  if (xs.length) {
+    var x = xs.pop();
+    return add(x, addMany(xs));
+  }
+  return '0';
+}
+
+function add(a, b) {
+  a = '0' + a;
+  b = '0' + b;
+  if (b.length > a.length) {
+    var str = a; a = b; b = str;
+  }
+  var str = '';
+  var carry = 0;
+  for (var i = 0; i < b.length; i++) {
+    str = (((+a[a.length - i - 1]) + (+b[b.length - i - 1]) + carry) % 10) + str;
+    carry = ((+a[a.length - i - 1]) + (+b[b.length - i - 1]) + carry) / 10 | 0;
+  }
+  if (a.length > b.length) {
+    if (carry) {
+      str = (+a[a.length - b.length - 1] + carry) + str;
+    } else {
+      str = a[a.length - b.length - 1] + str;
+    }
+    str = a.slice(0, a.length - b.length - 1) + str;
+  } else {
+    if (carry) {
+      str = carry + str;
+    }
+  }
+  return unpad(str);
+}
+
+function unpad(s) {
+  while (s[0] == '0') {
+    s = s.slice(1);
+  }
+  return s;
+}
+
+
+</script>
+</head>
+</html>
