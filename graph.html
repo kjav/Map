@@ -1,0 +1,20 @@
+<html>
+  <head>
+    
+  </head>
+
+  <body>
+    <canvas id='canvas' width='500' height='500'>
+    </canvas>
+  </body>
+  <script>
+    var context = canvas.getContext('2d');
+    context.fillStyle = '#000000';
+    function f(x) {
+      return 4 * Math.pow(x-0.5, 3) + 0.5;
+    }
+    for (var i=0;i<500;i++) {
+      context.fillRect(i, 500 * (1-f(i/500)), 1, 1);
+    }
+  </script>
+</html>

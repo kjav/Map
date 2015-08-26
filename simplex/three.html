@@ -4,8 +4,24 @@
   </body>
   <script src='BigInt.js'></script>
   <script src='simplex.js'></script>
-  <script src='map.js'></script>
+  <script src='map_worker.js'></script>
   <script src='three.min.js'></script>
   <script src='OrbitControls.js'></script>
   <script src='main.js'></script>
+  <script>
+    var worker = new Worker('map_worker.js');
+    worker.onmessage = function(e) {
+      console.log(e);
+      if (event.data.success) {
+        if (event.data.command === "getChunk") {
+          console.log(event.data.chunk);
+        } else if (event.data.command === "init") {
+          worker.postMessage({ command: 'getChunk', position: { x: 0, y: 0 } });
+        }
+      } else {
+        console.log("web worker error: " + event.data.err ? event.data.err : '');
+      }
+    }
+    worker.postMessage({ command: 'init', seed: 6123415 });
+  </script>
 </html>
