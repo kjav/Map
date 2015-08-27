@@ -1,5 +1,26 @@
 <html>
   <body style='margin: 0; padding: 0;'>
+    <div id='vertexshader'>
+      varying vec3 vNormal;
+      varying float vHeight;
+      void main() {
+        vNormal = normal;
+        vHeight = position[2] / 80.0;
+        gl_Position = projectionMatrix *
+          modelViewMatrix *
+          vec4(position,1.0);
+      }
+    </div>
+    <div id='fragmentshader'>
+      varying vec3 vNormal;
+      varying float vHeight;
+      void main() {
+        vec3 light = vec3(0.5, 0.2, 1.0);
+        light = normalize(light);
+        float dProd = max(0.0, dot(vNormal, light));
+        gl_FragColor = vec4(vHeight * dProd, dProd, 0.0, 1.0);
+      }
+    </div>
     <button onclick='addChunk()' style='right: 0px; height: 80px; bottom: 0px; position: absolute;'>Add chunk to map</button>
   </body>
   <script src='BigInt.js'></script>

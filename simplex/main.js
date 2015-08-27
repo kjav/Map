@@ -43,9 +43,10 @@ document.body.insertBefore(renderer.domElement, document.body.firstChild);
 
 
 var planeMaterial =
-  new THREE.MeshLambertMaterial(
+  new THREE.ShaderMaterial(
     {
-      color: 0x44ee22
+      vertexShader: document.getElementById('vertexshader').innerHTML,
+      fragmentShader: document.getElementById('fragmentshader').innerHTML
     });
 
 var waterMaterial =
@@ -318,10 +319,10 @@ function getSplatter() {
         // paint red
         console.log(i, j);
         loadChunk(i, j);
-        drawLineOnGround({x: -127.5 + 255 * i, y: 127.5 + 255 * j}, {x: -127.5 + 255 * (i+1), y: 127.5 + 255 * j});
-        drawLineOnGround({x: -127.5 + 255 * (i+1), y: 127.5 + 255 * j}, {x: -127.5 + 255 * (i+1), y: 127.5 + 255 * (j+1)});
-        drawLineOnGround({x: -127.5 + 255 * (i+1), y: 127.5 + 255 * (j+1)}, {x: -127.5 + 255 * i, y: 127.5 + 255 * (j+1)});
-        drawLineOnGround({x: -127.5 + 255 * i, y: 127.5 + 255 * (j+1)}, {x: -127.5 + 255 * i, y: 127.5 + 255 * j});
+        drawLineOnGround({x: -127.5 + 255 * i, y: -127.5 + 255 * j}, {x: -127.5 + 255 * (i+1), y: -127.5 + 255 * j});
+        drawLineOnGround({x: -127.5 + 255 * (i+1), y: -127.5 + 255 * j}, {x: -127.5 + 255 * (i+1), y: -127.5 + 255 * (j+1)});
+        drawLineOnGround({x: -127.5 + 255 * (i+1), y: -127.5 + 255 * (j+1)}, {x: -127.5 + 255 * i, y: -127.5 + 255 * (j+1)});
+        drawLineOnGround({x: -127.5 + 255 * i, y: -127.5 + 255 * (j+1)}, {x: -127.5 + 255 * i, y: -127.5 + 255 * j});
       }
     }
 
@@ -357,6 +358,7 @@ function loadChunk(x, y) {
       }
     }
     bgeometry.attributes.position.needsUpdate = true;
+    bgeometry.computeVertexNormals();
     var bplane = new THREE.Mesh( bgeometry, planeMaterial );
     bplane.position.y -= 255 * y;
     bplane.position.x += 255 * x;

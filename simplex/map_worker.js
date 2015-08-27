@@ -43,12 +43,12 @@ function delta(x) {
   if (max < x) max = x;
   if (min > x) min = x;
 
-  if (x > 0.24) {
-    x = (x - 0.24) / 4 + 0.24;
-  }
-  if (x > 0.32) {
-    x = 0.26;
-  }
+//  if (x > 0.24) {
+//    x = (x - 0.24) / 4 + 0.24;
+//  }
+//  if (x > 0.32) {
+//    x = 0.26;
+//  }
   return x;
 }
 
